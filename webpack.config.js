@@ -1,14 +1,13 @@
-const path = require("path");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-
+const path = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
-  mode: 'devlopment',
+  mode: 'development',
   entry: './src/main/index.tsx',
   output: {
-    path: path.join(__dirname, 'plublic/js'),
-    publicPath: './public/js',
-    filename: 'bundle.js',
+    path: path.join(__dirname, 'public/js'),
+    publicPath: '/public/js',
+    filename: 'bundle.js'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', 'scss'],
@@ -25,12 +24,12 @@ module.exports = {
       test: /\.scss$/,
       use: [{
         loader: 'style-loader'
-      },{
+      }, {
         loader: 'css-loader',
-        opitons: {
+        options: {
           modules: true
         }
-      },{
+      }, {
         loader: 'sass-loader'
       }]
     }]
