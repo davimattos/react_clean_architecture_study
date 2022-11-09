@@ -15,5 +15,15 @@
     right: 8px;
     font-size: 12px;
     cursor: help;
+
+    .badge {
+      height: 12px;
+      width: 12px;
+      display: table-cell;
+      text-align: center;
+      vertical-align: middle;
+      border-radius: 50%;
+      background: linear-gradient(60deg, rgb(251, 151, 151), red);
+    }
   }
 }
