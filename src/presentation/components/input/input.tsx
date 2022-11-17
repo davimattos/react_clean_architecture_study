@@ -7,6 +7,7 @@ type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>
 
 const Input: React.FC<Props> = (props: Props) => {
   const { state, setState } = useContext(Context)
+  const error = state[`${props.name}Error`]
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
     event.target.readOnly = false
   }
@@ -19,18 +20,18 @@ const Input: React.FC<Props> = (props: Props) => {
   }
 
   const getStatus = (): string => {
-    return Styles.badge
+    return error ? Styles.badge['red-bullet'] : Styles.badge['green-bullet']
   }
 
   const getTitle = (): string => {
-    return state[`${props.name}Error`]
+    return error || ''
   }
 
   return (
     <div className={Styles.inputWrap}>
       <input {...props} readOnly onFocus={enableInput} onChange={handleChange}/>
       <span className={Styles.status}>
-        <span data-testid={`${props.name}-status`} title={getTitle()} className={getStatus()}/>
+        <span data-testid={`${props.name}-status`} title={getTitle()} className={`${Styles.badge} ${getStatus()}`}/>
       </span>
     </div>
   )
