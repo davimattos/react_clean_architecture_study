@@ -1,52 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { Header, Footer, Input, FormStatus } from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-content'
-import { Validation } from '@/presentation/protocols/validation'
-import { Authentication } from '@/domain/usecases'
 
 import Styles from './login-styles.scss'
 
-type Props = {
-  validation: Validation
-  authentication: Authentication
+type State = {
+  isLoading: boolean
+  email: string
+  password: string
+  emailError: string
+  passwordError: string
+  mainError: string
 }
 
-const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
-  const history = useHistory()
-  const [state, setState] = useState({
-    isLoading: false,
-    email: '',
-    password: '',
-    emailError: 'Campo obrigatório',
-    passwordError: 'Campo obrigatório',
-    mainError: ''
-  })
+type Props = {
+  state: State
+  setState: React.Dispatch<React.SetStateAction<State>>
+  handleSubmit: React.FormEventHandler<HTMLFormElement>
+}
 
-  useEffect(() => {
-    setState({
-      ...state,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password)
-    })
-  }, [state.email, state.password])
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault()
-    try {
-      if (state.isLoading || state.emailError || state.passwordError) {
-        return
-      }
-      setState({ ...state, isLoading: true })
-      const account = await authentication.auth({ email: state.email, password: state.password })
-      localStorage.setItem('accessToken', account.accessToken)
-      history.replace('/')
-    } catch (error) {
-      setState({ ...state, isLoading: false, mainError: error.message })
-    }
-  }
-
+const Login: React.FC<Props> = ({ state, setState, handleSubmit }: Props) => {
   return (
     <div className={Styles.login}>
       <Header />
