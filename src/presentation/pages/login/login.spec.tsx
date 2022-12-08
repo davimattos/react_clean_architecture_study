@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history'
 import { AuthenticationSpy, ValidationStub } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 
-import Login from './login.container'
+import { Login } from '@/presentation/pages'
 
 type SutTypes = {
   sut: RenderResult
