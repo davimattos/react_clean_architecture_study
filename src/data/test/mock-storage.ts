@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { SetStorage } from '@/data/protocols/cache'
 
 export class SetStorageMock implements SetStorage {
