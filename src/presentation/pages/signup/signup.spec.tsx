@@ -26,15 +26,6 @@ const makeSut = (params?: SutParams): SutTypes => {
   return { sut }
 }
 
-const populateFieldByAriaLabel = (
-  sut: RenderResult,
-  ariaLabel: string,
-  value = faker.random.word(),
-): void => {
-  const field = sut.getByLabelText(ariaLabel)
-  fireEvent.input(field, { target: { value } })
-}
-
 describe('SignUp Component', () => {
   afterEach(cleanup)
 
@@ -52,7 +43,7 @@ describe('SignUp Component', () => {
   test('Should show name error if validation fails', () => {
     const validationError = faker.random.word()
     const { sut } = makeSut({ validationError })
-    populateFieldByAriaLabel(sut, 'name')
+    Helper.populateFieldByAriaLabel(sut, 'name')
     Helper.testStatusFormField(sut, 'name', validationError)
   })
 })

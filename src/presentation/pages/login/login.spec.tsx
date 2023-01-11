@@ -55,27 +55,11 @@ const simulateValidSubmit = async (
   email = faker.internet.email(),
   password = faker.internet.password(),
 ): Promise<void> => {
-  populateEmailField(sut, email)
-  populatePasswordField(sut, password)
+  Helper.populateFieldByAriaLabel(sut, 'email', email)
+  Helper.populateFieldByAriaLabel(sut, 'password', password)
   const form = sut.getByTestId('form')
   fireEvent.submit(form)
   await waitFor(() => form)
-}
-
-const populateEmailField = (
-  sut: RenderResult,
-  email = faker.internet.email(),
-): void => {
-  const emailInput = sut.getByRole('textbox', { name: /email/i })
-  fireEvent.input(emailInput, { target: { value: email } })
-}
-
-const populatePasswordField = (
-  sut: RenderResult,
-  password = faker.internet.password(),
-): void => {
-  const passwordInput = sut.getByLabelText(/password/i)
-  fireEvent.input(passwordInput, { target: { value: password } })
 }
 
 const testElementExists = (sut: RenderResult, fieldName): void => {
@@ -103,33 +87,33 @@ describe('Login Component', () => {
   test('Should show email error if validation fails', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
-    populateEmailField(sut)
+    Helper.populateFieldByAriaLabel(sut, 'email')
     Helper.testStatusFormField(sut, 'email', validationError)
   })
 
   test('Should show password error if validation fails', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
-    populatePasswordField(sut)
+    Helper.populateFieldByAriaLabel(sut, 'password')
     Helper.testStatusFormField(sut, 'password', validationError)
   })
 
   test('Should show valid email state if validation succeeds', () => {
     const { sut } = makeSut()
-    populateEmailField(sut)
+    Helper.populateFieldByAriaLabel(sut, 'email')
     Helper.testStatusFormField(sut, 'email')
   })
 
   test('Should show valid password state if validation succeeds', () => {
     const { sut } = makeSut()
-    populatePasswordField(sut)
+    Helper.populateFieldByAriaLabel(sut, 'password')
     Helper.testStatusFormField(sut, 'password')
   })
 
   test('Should enable submit button if form is valid', () => {
     const { sut } = makeSut()
-    populateEmailField(sut)
-    populatePasswordField(sut)
+    Helper.populateFieldByAriaLabel(sut, 'email')
+    Helper.populateFieldByAriaLabel(sut, 'password')
     Helper.testButtonIsDisabled(sut, /entrar/i, false)
   })
 
