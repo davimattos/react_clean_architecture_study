@@ -67,4 +67,28 @@ describe('SignUp Component', () => {
     Helper.populateFieldByAriaLabel(sut, 'passwordConfirmation')
     Helper.testStatusFormField(sut, 'passwordConfirmation', validationError)
   })
+
+  test('Should show valid name state if validation succeeds', () => {
+    const { sut } = makeSut()
+    Helper.populateFieldByAriaLabel(sut, 'name')
+    Helper.testStatusFormField(sut, 'name')
+  })
+
+  test('Should show valid email state if validation succeeds', () => {
+    const { sut } = makeSut()
+    Helper.populateFieldByAriaLabel(sut, 'email')
+    Helper.testStatusFormField(sut, 'email')
+  })
+
+  test('Should show valid password state if validation succeeds', () => {
+    const { sut } = makeSut()
+    Helper.populateFieldByAriaLabel(sut, 'password')
+    Helper.testStatusFormField(sut, 'password')
+  })
+
+  test('Should show valid passwordConfirmation state if validation succeeds', () => {
+    const { sut } = makeSut()
+    Helper.populateFieldByAriaLabel(sut, 'passwordConfirmation')
+    Helper.testStatusFormField(sut, 'passwordConfirmation')
+  })
 })
