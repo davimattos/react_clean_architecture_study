@@ -9,10 +9,13 @@ import {
 import faker from 'faker'
 
 import { Helper, ValidationStub } from '@/presentation/test'
+import { AddAccountSpy } from '@/presentation/test/mock-add-account'
+
 import SignUp from './signup'
 
 type SutTypes = {
   sut: RenderResult
+  addAccountSpy: AddAccountSpy
 }
 
 type SutParams = {
@@ -22,9 +25,12 @@ type SutParams = {
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
-  const sut = render(<SignUp validation={validationStub} />)
+  const addAccountSpy = new AddAccountSpy()
+  const sut = render(
+    <SignUp validation={validationStub} addAccount={addAccountSpy} />,
+  )
 
-  return { sut }
+  return { sut, addAccountSpy }
 }
 
 const simulateValidSubmit = async (
@@ -32,16 +38,11 @@ const simulateValidSubmit = async (
   name = faker.name.findName(),
   email = faker.internet.email(),
   password = faker.internet.password(),
-  passwordConfirmation = faker.internet.password(),
 ): Promise<void> => {
   Helper.populateFieldByAriaLabel(sut, 'name', name)
   Helper.populateFieldByAriaLabel(sut, 'email', email)
   Helper.populateFieldByAriaLabel(sut, 'password', password)
-  Helper.populateFieldByAriaLabel(
-    sut,
-    'passwordConfirmation',
-    passwordConfirmation,
-  )
+  Helper.populateFieldByAriaLabel(sut, 'passwordConfirmation', password)
   const form = sut.getByTestId('form')
   fireEvent.submit(form)
   await waitFor(() => form)
@@ -126,5 +127,19 @@ describe('SignUp Component', () => {
     const { sut } = makeSut()
     await simulateValidSubmit(sut)
     Helper.testElementExists(sut, 'spinner')
+  })
+
+  test('Should call AddAccount with correct values', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    const name = faker.name.findName()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    await simulateValidSubmit(sut, name, email, password)
+    expect(addAccountSpy.params).toEqual({
+      name,
+      email,
+      password,
+      passwordConfirmation: password,
+    })
   })
 })
