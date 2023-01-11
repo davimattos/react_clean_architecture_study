@@ -10,23 +10,29 @@ type Props = {
   validation: Validation
 }
 
+type FormFieldType = 'name' | 'email' | 'password' | 'passwordConfirmation'
+
 const SignUp: React.FC<Props> = ({ validation }: Props) => {
   const [state, setState] = useState({
     isLoading: false,
     name: '',
     nameError: 'Campo obrigatório',
+    email: '',
     emailError: 'Campo obrigatório',
     passwordError: 'Campo obrigatório',
     passwordConfirmationError: 'Campo obrigatório',
     mainError: '',
   })
 
-  useEffect(() => {
-    setState({
-      ...state,
-      nameError: validation.validate('name', state.name),
-    })
-  }, [state.name])
+  const validate = (field: FormFieldType): void => {
+    setState((old: any) => ({
+      ...old,
+      [`${field}Error`]: validation.validate(field, state[field]),
+    }))
+  }
+
+  useEffect(() => validate('name'), [state.name])
+  useEffect(() => validate('email'), [state.email])
 
   return (
     <div className={Styles.signup}>
@@ -40,7 +46,12 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
             name="name"
             placeholder="Digite seu nome"
           />
-          <Input type="email" name="email" placeholder="Digite seu e-mail" />
+          <Input
+            aria-label="email"
+            type="email"
+            name="email"
+            placeholder="Digite seu e-mail"
+          />
           <Input
             type="password"
             name="password"
