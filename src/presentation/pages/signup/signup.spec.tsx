@@ -4,6 +4,7 @@ import {
   fireEvent,
   render,
   RenderResult,
+  waitFor,
 } from '@testing-library/react'
 import faker from 'faker'
 
@@ -26,6 +27,26 @@ const makeSut = (params?: SutParams): SutTypes => {
   return { sut }
 }
 
+const simulateValidSubmit = async (
+  sut: RenderResult,
+  name = faker.name.findName(),
+  email = faker.internet.email(),
+  password = faker.internet.password(),
+  passwordConfirmation = faker.internet.password(),
+): Promise<void> => {
+  Helper.populateFieldByAriaLabel(sut, 'name', name)
+  Helper.populateFieldByAriaLabel(sut, 'email', email)
+  Helper.populateFieldByAriaLabel(sut, 'password', password)
+  Helper.populateFieldByAriaLabel(
+    sut,
+    'passwordConfirmation',
+    passwordConfirmation,
+  )
+  const form = sut.getByTestId('form')
+  fireEvent.submit(form)
+  await waitFor(() => form)
+}
+
 describe('SignUp Component', () => {
   afterEach(cleanup)
 
@@ -39,6 +60,11 @@ describe('SignUp Component', () => {
     Helper.testStatusFormField(sut, 'password', validationError)
     Helper.testStatusFormField(sut, 'passwordConfirmation', validationError)
   })
+
+  const testElementExists = (sut: RenderResult, fieldName): void => {
+    const element = sut.getByTestId(fieldName)
+    expect(element).toBeTruthy()
+  }
 
   test('Should show name error if validation fails', () => {
     const validationError = faker.random.word()
@@ -99,5 +125,11 @@ describe('SignUp Component', () => {
     Helper.populateFieldByAriaLabel(sut, 'password')
     Helper.populateFieldByAriaLabel(sut, 'passwordConfirmation')
     Helper.testButtonIsDisabled(sut, /entrar/i, false)
+  })
+
+  test('Should show spinner on submit', async () => {
+    const { sut } = makeSut()
+    await simulateValidSubmit(sut)
+    testElementExists(sut, 'spinner')
   })
 })
