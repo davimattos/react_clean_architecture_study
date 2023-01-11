@@ -61,11 +61,6 @@ describe('SignUp Component', () => {
     Helper.testStatusFormField(sut, 'passwordConfirmation', validationError)
   })
 
-  const testElementExists = (sut: RenderResult, fieldName): void => {
-    const element = sut.getByTestId(fieldName)
-    expect(element).toBeTruthy()
-  }
-
   test('Should show name error if validation fails', () => {
     const validationError = faker.random.word()
     const { sut } = makeSut({ validationError })
@@ -130,6 +125,6 @@ describe('SignUp Component', () => {
   test('Should show spinner on submit', async () => {
     const { sut } = makeSut()
     await simulateValidSubmit(sut)
-    testElementExists(sut, 'spinner')
+    Helper.testElementExists(sut, 'spinner')
   })
 })

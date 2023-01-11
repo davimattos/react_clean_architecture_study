@@ -37,3 +37,8 @@ export const populateFieldByAriaLabel = (
   const field = sut.getByLabelText(ariaLabel)
   fireEvent.input(field, { target: { value } })
 }
+
+export const testElementExists = (sut: RenderResult, fieldName): void => {
+  const element = sut.getByTestId(fieldName)
+  expect(element).toBeTruthy()
+}
