@@ -91,4 +91,13 @@ describe('SignUp Component', () => {
     Helper.populateFieldByAriaLabel(sut, 'passwordConfirmation')
     Helper.testStatusFormField(sut, 'passwordConfirmation')
   })
+
+  test('Should enable submit button if form is valid', () => {
+    const { sut } = makeSut()
+    Helper.populateFieldByAriaLabel(sut, 'name')
+    Helper.populateFieldByAriaLabel(sut, 'email')
+    Helper.populateFieldByAriaLabel(sut, 'password')
+    Helper.populateFieldByAriaLabel(sut, 'passwordConfirmation')
+    Helper.testButtonIsDisabled(sut, /entrar/i, false)
+  })
 })
