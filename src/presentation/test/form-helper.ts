@@ -1,6 +1,15 @@
 import { fireEvent, RenderResult } from '@testing-library/react'
 import faker from 'faker'
 
+export const testElementText = (
+  sut: RenderResult,
+  fieldName,
+  text: string,
+): void => {
+  const element = sut.getByTestId(fieldName)
+  expect(element.textContent).toBe(text)
+}
+
 export const testErrorWrapChildCount = (
   sut: RenderResult,
   count: number,
