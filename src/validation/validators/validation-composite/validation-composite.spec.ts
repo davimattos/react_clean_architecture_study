@@ -11,7 +11,7 @@ type SutTypes = {
 const makeSut = (fieldName: string): SutTypes => {
   const fieldValidationsSpy = [
     new FieldValidationSpy(fieldName),
-    new FieldValidationSpy(fieldName)
+    new FieldValidationSpy(fieldName),
   ]
 
   const sut = ValidationComposite.build(fieldValidationsSpy)
@@ -26,14 +26,18 @@ describe('ValidationComposite', () => {
     const errorMessage = faker.random.words()
     fieldValidationsSpy[0].error = new Error(errorMessage)
     fieldValidationsSpy[1].error = new Error(faker.random.words())
-    const error = sut.validate(fieldName, faker.random.word())
+    const error = sut.validate(fieldName, {
+      [fieldName]: faker.random.word(),
+    })
     expect(error).toBe(errorMessage)
   })
 
   test('Should return falsy if any validation not fails', () => {
     const fieldName = faker.database.column()
     const { sut } = makeSut(fieldName)
-    const error = sut.validate(fieldName, faker.random.word())
+    const error = sut.validate(fieldName, {
+      [fieldName]: faker.random.word(),
+    })
     expect(error).toBeFalsy()
   })
 })

@@ -44,7 +44,7 @@ const SignUp: React.FC<Props> = ({
   const validate = (field: FormFieldType): void => {
     setState((old: any) => ({
       ...old,
-      [`${field}Error`]: validation.validate(field, state[field]),
+      [`${field}Error`]: validation.validate(field, { [field]: state[field] }),
     }))
   }
 
