@@ -63,7 +63,11 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
         passwordConfirmation: state.passwordConfirmation,
       })
     } catch (error) {
-      setState((old: any) => ({ ...old, isLoading: false }))
+      setState((old: any) => ({
+        ...old,
+        isLoading: false,
+        mainError: error.message,
+      }))
     }
   }
 
