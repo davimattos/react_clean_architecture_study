@@ -1,7 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
-import { Header, Footer, Input, FormStatus } from '@/presentation/components'
+import {
+  Header,
+  Footer,
+  Input,
+  FormStatus,
+  SubmitButton,
+} from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-content'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddAccount, SaveAccessToken } from '@/domain/usecases'
@@ -50,16 +56,24 @@ const SignUp: React.FC<Props> = ({
     [state.passwordConfirmation],
   )
 
+  const isFormInvalid = useMemo(() => {
+    return (
+      !!state.nameError ||
+      !!state.emailError ||
+      !!state.passwordError ||
+      !!state.passwordConfirmationError
+    )
+  }, [
+    state.nameError,
+    state.emailError,
+    state.passwordError,
+    state.passwordConfirmationError,
+  ])
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      if (
-        state.isLoading ||
-        state.nameError ||
-        state.emailError ||
-        state.passwordError ||
-        state.passwordConfirmationError
-      ) {
+      if (state.isLoading || isFormInvalid) {
         return
       }
       setState((old: any) => ({ ...old, isLoading: true }))
@@ -113,17 +127,7 @@ const SignUp: React.FC<Props> = ({
             name="passwordConfirmation"
             placeholder="Confirme sua senha"
           />
-          <button
-            disabled={
-              !!state.nameError ||
-              !!state.emailError ||
-              !!state.passwordError ||
-              !!state.passwordConfirmationError
-            }
-            className={Styles.submit}
-            type="submit">
-            Entrar
-          </button>
+          <SubmitButton disabled={isFormInvalid}>Cadastrar</SubmitButton>
           <Link
             data-testid="login-link"
             replace

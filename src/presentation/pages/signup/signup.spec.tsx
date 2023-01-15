@@ -73,7 +73,7 @@ describe('SignUp Component', () => {
     const validationError = faker.random.word()
     const { sut } = makeSut({ validationError })
     Helper.testErrorWrapChildCount(sut, 0)
-    Helper.testButtonIsDisabled(sut, /entrar/i, true)
+    Helper.testButtonIsDisabled(sut, /cadastrar/i, true)
     Helper.testStatusFormField(sut, 'name', validationError)
     Helper.testStatusFormField(sut, 'email', validationError)
     Helper.testStatusFormField(sut, 'password', validationError)
@@ -138,7 +138,7 @@ describe('SignUp Component', () => {
     Helper.populateFieldByAriaLabel(sut, 'email')
     Helper.populateFieldByAriaLabel(sut, 'password')
     Helper.populateFieldByAriaLabel(sut, 'passwordConfirmation')
-    Helper.testButtonIsDisabled(sut, /entrar/i, false)
+    Helper.testButtonIsDisabled(sut, /cadastrar/i, false)
   })
 
   test('Should show spinner on submit', async () => {

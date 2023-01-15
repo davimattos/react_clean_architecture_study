@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
 import { Authentication, SaveAccessToken } from '@/domain/usecases'
-import { Header, Footer, Input, FormStatus } from '@/presentation/components'
+import {
+  Header,
+  Footer,
+  Input,
+  FormStatus,
+  SubmitButton,
+} from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-content'
 import { Validation } from '@/presentation/protocols/validation'
 
@@ -41,12 +47,16 @@ const Login: React.FC<Props> = ({
   useEffect(() => validate('email'), [state.email])
   useEffect(() => validate('password'), [state.password])
 
+  const isFormInvalid = useMemo(() => {
+    return !!state.emailError || !!state.passwordError
+  }, [state.emailError, !!state.passwordError])
+
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>,
   ): Promise<void> => {
     event.preventDefault()
     try {
-      if (state.isLoading || state.emailError || state.passwordError) {
+      if (state.isLoading || isFormInvalid) {
         return
       }
       setState({ ...state, isLoading: true })
@@ -86,12 +96,7 @@ const Login: React.FC<Props> = ({
             name="password"
             placeholder="Digite sua senha"
           />
-          <button
-            className={Styles.submit}
-            disabled={!!state.emailError || !!state.passwordError}
-            type="submit">
-            Entrar
-          </button>
+          <SubmitButton disabled={isFormInvalid}>Entrar</SubmitButton>
           <Link data-testid="signup" to="/signup" className={Styles.link}>
             Criar conta
           </Link>
